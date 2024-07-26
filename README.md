@@ -1,148 +1,336 @@
-# **Lightswitch**
 
-LightSwitch는 오픈소스 피쳐플래깅 솔루션으로, 가볍고 편리하게 A/B Test, Target Test를 
-지원합니다. LightSwitch는 Docker Image 형태로 배포되어 편리하게 서비스와 통합 가능하며, 
-현재 Java, JavaScript, Python 언어를 지원합니다.
+![Untitled (19)](https://github.com/user-attachments/assets/9ec237dd-148b-4269-8672-db6b55f46896)
 
-Lightswitch is a lightweight Python library that allows you to easily implement 
-feature toggles (also known as feature flags) in your Python applications. 
-With Lightswitch, you can control the activation of features in your application 
-remotely without requiring code changes or re-deployments.
+# **피처 플래깅 솔루션 : Light Switch**
 
-## 사용 예시
+기간 : **2024.04.08 ~. 2024.05.20  / 7주**
 
-### 특징
+기관 : SSAFY 10기 2학기 자율 프로젝트 / 6인
 
-- A/B Test, Targeted Test를 지원합니다.
-- SDK 내부적으로 Default 값을 지원합니다.
-- SSE를 통해 플래그 변경을 실시간으로 감지합니다.
+Github : https://github.com/LightSwitch-S202/LightSwitch
 
-### 플래그 값 결정 시나리오
+성과: SSAFY 10기 2학기 자율 프로젝트 우수상
 
-플래그 값 결정은 다음과 같이 진행합니다.
+---
 
-1. 해당 플래그가 존재하는지 확인합니다.
 
-   1-1. 플래그가 존재하지 않는다면, SDK 이용시 설정한 Default 값을 활용합니다.
+### **피처플래그 (Feature Flag)**
 
-2. 해당 플래그에 keyword 속성이 존재하는지 확인합니다. Keyword 속성이 존재하는 경우,
-이는 해당 플래그가 Targeted Test에 이용된다는 것을 의미합니다.
 
-   2-1. keyword가 존재하고, LSUser 내부 properties와 일치하는 경우, 
-   해당 키워드의 값을 활용합니다.
+소프트웨어 개발에서 **특정 기능이나 코드를 조건적으로 활성화하거나 비활성화할 수 있게 해주는 기술**
 
-3. 해당 플래그의 variations 속성이 존재하는지 확인합니다.
-variations 속성에는 백분율 범위와 해당 범위의 사용자에게 할당될 값이 저장되어 있습니다.
+피처 플래그, 피처 토글, 기능 토글 등 다양한 이름으로 불리우며, **새로운 코드를 배포하지 않고 런타임에 특정 기능을 키거나 끌 수 있다**.
 
-   3-1. 사용자 식별자와 플래그 이름을 이용하여 사용자가 플래그 별로 고유한 백분율 값(float)
-   을 갖도록합니다. 해당 사용자의 백분율 값과 백분율 범위를 비교해 해당하는 variation 값을 
-   활용합니다.
+이를 활용하면 손쉽게 오류에 대처하거나, 롤백, A/B 테스트, 카리나 배포 등이 가능하다.
 
-### LightSwitch Python SDK 설치
+<br>
 
-LightSwitch SDK를 이용하기 위해 필수적으로 프로젝트에 설치해야 합니다.
+### **피처플래깅 솔루션 : Light Switch**
 
-pip을 통한 설치:
+Light Switch는 **오픈소스 피쳐플래깅 솔루션**으로 Docker Image 형태로 배포되어 있으며 MIT 라이센스에 따라 사용자 맞춤형 개발이 가능하다.
+
+특정 기능을 키고 끌 수 있는 기능 토글,
+실사용자를 대조군과 실험군으로 나누어 어떤 기능이 더 효율적인지 테스트 할 수 있는 A/B Test,
+특정한 사용자만 타겟팅이 가능한 Target Test를 지원한다.
+
+또한, 활용에 따라 오류에 쉽게 대처할 수 있고, 기능 롤백, 카리나 배포를 수행할 수 있다.
+
+<br>
+
+Light Switch는 Java, JavaScript, Python 언어의 SDK를 지원하며, 플래그를 관리할 수 있는 웹 대시보드를 중심으로 기능만 빠르게 토글할 수 있는
+IOS, Android 앱 대시보드를 지원한다. 
+
+
+
+
+
+
+<br><br><br>
+
+
+
+
+
+
+### 주요 담당 기술
+
+- Back-end
+    - Spring Boot, Kotlin, Spring AOP, SpringJPA, QueryDSL
+- JavaSDK
+    - Java11, SSE(Server-Sent-Event)
+
+### **담당 요약 :**
+
+- JAVA SDK 제작
+    - Flag 값을 캐시를 통해 반환하여 응답속도 개선
+    - HttpURLConnection을 이용한 Get, Post 서버 통신
+    - HttpURLConnection을 이용한 SSE(Server-Sent-Event) 구현으로 실시간 Flag 업데이트 정보 반영
+    - Maven Central Repository에 Artifacts 배포
+- Back-end(Kotlin)
+    - Spring AOP를 이용하여 Flag의 기록 저장
+- Front-end
+    - Tag UI/기능 구현
+- INFRA
+    - Blue/Green 무중단 배포 스크립트 작성
+
+<br><br><br>
+
+---
+
+## 시스템 아키텍쳐
+
+실질적으로 LightSwitch 피처플래깅 솔루션을 제공받는 사용자는 SDK를 사용하는 개발자인 Clinet Developer이다.\
+Clinet Developer는 Light Switch SDK를 이용하여 개발 시에 메서드로 손쉽게 피처 플래그를 설정하고 관리할 수 있다.
+
+
+![Untitled (20)](https://github.com/user-attachments/assets/506dbbfc-ca2f-40f4-9801-1530d939bae0)
+
+
+<br><br>
+
+
+## Java SDK, Maven Central Repository 배포
+
+Java SDK를 Maven Central Repository에 배포하여 쉬운 접근성을 유지하였다.
+
+https://central.sonatype.com/artifact/kr.lightswitch.www/lightswitch
+
+![Untitled (22)](https://github.com/user-attachments/assets/0deebaa5-bf41-4627-b608-10b36a7a924c)
+![Untitled (23)](https://github.com/user-attachments/assets/348bdc9a-45c5-4240-9619-38c7f534b5ea)
+
+
+
+
+
+## 사용 방법
+
+주요 사용 방법에서는 대표적인 언어인 Java SDK를 기준으로 설명하며, 각 언어에 대한 설명은 언어별 SDK 저장소의 README.md에서 읽을 수 있다.
+
+### LightSwitch Java SDK 의존성 설정
+
+build.gradle
+```java
+implementation 'kr.lightswitch.www:lightswitch:1.0.1'
 ```
-pip install lightswitch_kr
+build.gradle.kt
+```kt
+implementation("kr.lightswitch.www:lightswitch:1.0.0")
 ```
-
-poetry를 통한 설치:
+pom.xml
 ```
-poetry add lightswitch_kr
-```
-poetry add 명령어를 통해 lock파일에 의존성을 추가합니다.
-
-### Quick Start
-
-1.인스턴스 생성
-
-LightSwitch는 동일한 sdk_key로 가져온 플래그의 무결성을 위해, 싱글톤 인스턴스를 사용합니다.
-LightSwitch 인터페이스의 get_instance()를 호출하여 싱글톤 인스턴스를 생성할 수 있습니다.
-
-```
-lightswitch = LightSwitch.get_instance(); // LightSwitch 서비스 인스턴스 생성
-```
-
-인스턴스 생성 시 전달 가능한 인자
-```
-api_url: typing.Optional[str] = None, 
-sse_realtime_api_url: typing.Optional[str] = None,
-request_timeout_seconds: typing.Optional[int] = None,
-update_frequency_seconds:typing.Union[int, float] = 10,
-retries: typing.Optional[Retry] = None,
-proxies: typing.Optional[typing.Dict[str, str]] = None,
-```
-
-전달하지 않은 경우 None이 할당되거나 내부적으로 DEFAULT_API_URL 처럼 기본값을 선언하여
-속성 값으로 할당할 수 있습니다. 
-
-2.초기화
-
-서버에서 생성한 플래그를 얻기 위해 필수적으로 LightSwitch 서비스를 초기화 해야 합니다.
-environment_key 인자 값은 필수입니다.
-
-```
-ls.init(environment_key=env_key)
-```
-
-### LightSwitch Python SDK 플래그 수신
-
-플래그 값을 수신하기 이전에 해당 플래그의 활성화 여부만을 확인할 수 있습니다.
-이때 플래그 이름을 인자로 전달하고 bool 값을 반환받습니다. 
-
-플래그 활성화 여부에 따라 조건문으로 처리하여 
-플래그가 활성화되어 있는 경우에 수행할 코드에서 특정 사용자에 대한 값을 받아오도록 합니다.  
-
-```
-is_new_feature_active = ls.flags.is_feature_enabled("new_tag")
-```
-
-LightSwitch의 경우 아래의 메서드를 통해 플래그를 수신할 수 있습니다.
-flag_title를 인자로 전달해 특정 유저의 해당 플래그 값을 수신합니다.
-
-```
-get_flag(self, flag_title: str, user: LSUser, default_value: typing.Any) -> typing.Any;
-get_boolean_flag(self, flag_title: str, user: LSUser, default_value: bool) -> bool;
-def get_number_flag(self, flag_title: str, user: LSUser, default_value: int) -> int;
-def get_string_flag(self, flag_title: str, user: LSUser, default_value: str) -> str;
-```
-
-### LightSwitch Python SDK 실시간 데이터 수신
-
-LightSwitch SDK는 내부적으로 SSE 통신을 통해 서버로부터 플래그 변경사항을 실시간으로 
-감지합니다.
-
-init 호출 시에 StreamManager의 인스턴스를 생성하고 서버와 연결을 유지한 상태로 
-서버로부터 이벤트 스트림을 받을 수 있습니다. 
-
-process_stream_event_update에서 이벤트 스트림을 수신하여 처리합니다. 
-
-### LightSwitch Python SDK 사용자 모델
-
-만약 특정 사용자를 대상으로 피쳐 플래깅을 이용하고 싶다면 `LSUser` 클래스를 통해 
-사용자의 정보를 입력하고, 해당 사용자에 대해 설정된 플래그를 수신할 수 있습니다.
-
-```
-user_id = 1
-key = "memberId"
-value = "1"
-
-this_user = LSUser(user_id=user_id).set_property(key, value)
+<dependency>
+    <groupId>kr.lightswitch.www</groupId>
+    <artifactId>lightswitch</artifactId>
+    <version>1.0.0</version>
+</dependency>
 ```
 
-문자열 타입의 user_id와 딕셔너리 타입의 property = {"memberId" : "1"} 인 LSUser 클래스의
-인스턴스가 생성됩니다.
+<br>
+의존성을 추가하면 해당 SDK를 이용하여 피처플래그에 관련한 메서드 호출이 가능하다.
 
-LSUser 클래스로 애플리케이션 사용자를 식별하고 속성을 관리할 수 있습니다.
-이때 각 사용자의 식별자인 user_id는 A/B Test에 속성의 key-value는 Targeted Test에서
-사용자를 특정하고 그에 따라 플래그의 값을 지정하는데 사용됩니다. 
 
-### LightSwitch Python SDK 연결 해제
 
-서버와의 SSE 연결을 해제하고 모든 정보를 초기화할 수 있습니다.
 
+
+### 인스턴스 생성하기 getInstance()
+
+LightSwitch는 항상 같은 값의 플래그를 얻어오기 위해, 싱글톤 인스턴스를 사용한다.
+LightSwitch 인터페이스의 getInstance()를 호출하여 싱글톤 인스턴스를 생성할 수 있다.
+
+사용 예시 :
+
+```java
+LightSwitch lightSwitch = LightSwitch.getInstance();
 ```
-lightswitch.destroy()
+
+
+<br>
+
+## Light Switch 초기화 `init()`
+
+LightSwitch 서버에서 초기 플래그를 SDK 내부적으로 캐싱하기위해 **필수적으로** LightSwitch 서비스를 초기화 해야 한다.\
+`init()` 수행 시 입력받는 `config`는 아래와 같다.
+
+```java
+// @param sdkKey    : LightSwitch 서버에서 발급 받은 sdk Key
+// @param serverUrl : 연결할 LightSwitch 서버 URL
+void init(String sdkKey, String serverUrl);
 ```
+
+사용 예시 :
+
+```java
+lightSwitch.init("your-private-sdk-key","https://lightswitch.kr");
+```
+
+<br>
+
+## 식별자 `LSUser.class`
+
+플래그에서 반환 값을 받아오기 위해서 클라이언트 유저의 기본적인 정보를 제공하는 `LSUser.class`를 선언해야 한다.
+
+`LSUser.class`는 Builder 패턴만을 지원하며, `userId`는 **필수 값**으로 지정해야 한다.\
+또한, 유저별로 속성을 지정하여 특정 유저만을 대상으로 한 타겟 테스팅을 수행할 수 있다.
+
+사용 예시 :
+
+```java
+LSUser lsUser = new LSUser.Builder("userId")
+	.build();
+
+LSUser lsUser = new LSUser.Builder("123")
+	.property("name", "LightSwitch") // 속성 : 값
+	.property("address", "seoul")   // 키워드에 매칭된다.
+	.build();
+```
+
+
+<br>
+
+![image](https://github.com/user-attachments/assets/820e9617-4918-4895-a320-455464b814f1)
+
+
+
+
+<br>
+
+## 플래그 반환 값 `getFlag()`, `get<T>Flag()`
+
+플래그의 반환 값을 얻는 메서드는 타입 안정성을 보장하는 메서드와 보장하지 않는 메서드로 나누어진다.
+
+```java
+// 타입을 알 수 없음
+<T> T getFlag(String key, LSUser LSUser, Object defaultValue);
+
+// 타입 안정성 보장
+Boolean getBooleanFlag(String key, LSUser LSUser, Boolean defaultValue);
+
+Integer getNumberFlag(String key, LSUser LSUser, Integer defaultValue);
+
+String getStringFlag(String key, LSUser LSUser, String defaultValue);
+```
+
+`getFlag()`는 타입 안정성을 보장하지 않는다.\
+만약 반환 받은 플래그의 반환 값 타입이 일치하지 않는다면, `Java.lang.ClassCastException` 예외를 던지기 때문에 `try/catch`를 적적히 수행해야 한다.
+
+타입 안정성을 보장하는 메서드로 플래그를 얻어올 때, 해당 플래그의 타입과 메서드 유형이 일치하지 않는다면 `defaultValue`를 반환한다.\
+또한, 플래그의 `key`와 일치하는 이름의 플래그가 없을 경우에도 `defaultValue`를 반환한다.
+
+사용 예시 :
+
+```java
+boolean typeUnsafeFlag = lightswitch.getFlag("flag-name", user, false);
+boolean typeSafeFlag = lightswitch.getBooleanFlag("flag-name", user, false);
+```
+
+![image](https://github.com/user-attachments/assets/7c80208d-3cce-4b95-b0de-bf1b2ff634bb)
+
+
+
+<br>
+
+## Light Switch 사용 해제 `destroy()`
+
+LightSwitch 서비스와의 연결을 런타임에 해제하고 싶은 경우 `destroy()`를 이용하여 연결을 해제할 수 있다.\
+캐싱된 모든 플래그도 초기화 됨에 유의해야한다.
+
+`destroy()`가 호출 될 경우 다음과 같은 작업들이 이루어 진다.
+
+- Lightswitch Connection 연결 해제
+- Lightswitch SSE 연결 해제
+- 캐싱된 플래그 초기화
+
+```java
+void destroy();
+```
+
+사용 예시 :
+
+```java
+lightSwitch.destroy();
+```
+
+<br>
+
+# LightSwitch 활용
+
+
+## 플래그 실시간 변경
+
+LightSwitch SDK는 내부적으로 SSE(Server Sent Event) 통신을 통해 서버로부터 플래그 변경사항을 실시간으로 감지한다.\
+따라서, 사용자는 변경된 플래그를 새로 받아오기 위해서 아무런 작업도 할 필요가 없다.
+
+<br>
+
+## 플래그 키워드 `타겟 테스팅`
+
+LightSwitch는 플래그의 키워드와 속성을 통해 타겟 테스팅을 지원한다.
+
+먼저, 웹 대시보드를 통해 플래그의 키워드를 설정할 수 있다.\
+하나의 키워드에는 하나의 반환 값이 있으며, 포함된 속성을 모두 만족해야 키워드 조건을 만족한 것으로 간주한다.
+
+키워드 설정이 완료 됐다면, 플래그를 얻어올 때 `LSUser.class`의 속성`[속성:값]`을 설정할 수 있다.\
+`LSUser.class`의 속성`[속성:값]`이 키워드에 포함된 속성에 모두 포함되어 있을 경우, 키워드 반환 값을 반환한다.\
+키워드에 포함된 속성을 일부만 포함하고 있거나 포함하지 않는 경우, `플래그 변수 비율`방법에 따라 값을 반환한다.
+
+사용 예시 :
+
+```java
+LSUser lsUser = new LSUser.Builder("123")
+	.property("name", "olrlobt")
+	.property("age", "27")
+	.build();
+
+Boolean flagTest = lightSwitch.getBooleanFlag("FLAG TEST", lsUser, false);
+```
+
+위 예시에서 플래그의 키워드 속성이 `[name : olrlobt]`와 `[age : 27]`를 모두 만족하면 키워드 반환 값을 반환한다.\
+또한 플래그의 키워드 속성이 `[name : olrlobt]`와 `[age : 27]`를 둘 중 하나만 만족해도 키워드 반환 값을 반환한다.\
+
+하지만, 플래그의 키워드 속성이 `[name : olrlobt]`와 `[age : 27]` 외에도 `[company : ssafy]`를 갖고 있다면, 키워드 반환 값을 반환하지 않고
+`플래그 변수 비율` 방법에 따라 반환 값을 반환한다.
+
+<br>
+
+## 플래그 변수 비율 `A/B 테스트`, `카나리 배포`
+
+LightSwitch는 플래그 변수 비율을 실시간으로 조절하며 다양하게 활용할 수 있다.\
+변수 비율은 플래그를 얻을 때 사용하는 `LSUser.class`의 필수 `userId`에 따라 해시(MD-5)값 백분율을 기반으로 한다.
+
+사용 예시 :
+
+```java
+// Flag Variation 1 : True : 50%
+// Flag Variation 2 : False : 50%
+LSUser lsUser = new LSUser.Builder("000") // User Hash : 54.72%
+	.build();
+
+LSUser lsUser2 = new LSUser.Builder("123") // User Hash : 03.17%
+	.build();
+
+Boolean flagTest = lightSwitch.getBooleanFlag("FLAG TEST", lsUser, false); // False
+Boolean flagTest2 = lightSwitch.getBooleanFlag("FLAG TEST", lsUser2, false); // True
+```
+
+위 예시에서 플래그의 변수 비율이 50%, 50%의 비율로 설정이 되어 있다면, `LSUser.class`의 `userId` 값에의 해시값에 따라 반환 값이 달라질 수 있다.\
+이를 적절히 활용하여, `A/B 테스트`, `카나리 배포` 등 여러 방면으로 활용할 수 있다.
+
+<br>
+
+
+## 관련 포스팅
+
+[![MVN레퍼지배포](https://blogwidget.com/api/fix?theme=w&url=https://olrlobt.tistory.com/90)](https://olrlobt.tistory.com/90)
+
+[![무중단배포](https://blogwidget.com/api/fix?theme=w&url=https://olrlobt.tistory.com/92)](https://olrlobt.tistory.com/92)
+
+
+
+
+
+
+
+
+
+
 
