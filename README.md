@@ -14,7 +14,7 @@ Github : https://github.com/LightSwitch-S202/LightSwitch
 ---
 
 
-### **피처플래그 (Feature Flag)**
+## **피처플래그 (Feature Flag)**
 
 
 소프트웨어 개발에서 **특정 기능이나 코드를 조건적으로 활성화하거나 비활성화할 수 있게 해주는 기술**
@@ -25,7 +25,7 @@ Github : https://github.com/LightSwitch-S202/LightSwitch
 
 <br>
 
-### **피처플래깅 솔루션 : Light Switch**
+## **피처플래깅 솔루션 : Light Switch**
 
 Light Switch는 **오픈소스 피쳐플래깅 솔루션**으로 Docker Image 형태로 배포되어 있으며 MIT 라이센스에 따라 사용자 맞춤형 개발이 가능하다.
 
@@ -99,10 +99,10 @@ https://central.sonatype.com/artifact/kr.lightswitch.www/lightswitch
 ![Untitled (23)](https://github.com/user-attachments/assets/348bdc9a-45c5-4240-9619-38c7f534b5ea)
 
 
+<br><br><br>
 
 
-
-## 사용 방법
+# 사용 방법
 
 주요 사용 방법에서는 대표적인 언어인 Java SDK를 기준으로 설명하며, 각 언어에 대한 설명은 언어별 SDK 저장소의 README.md에서 읽을 수 있다.
 
@@ -129,7 +129,7 @@ pom.xml
 의존성을 추가하면 해당 SDK를 이용하여 피처플래그에 관련한 메서드 호출이 가능하다.
 
 
-
+<br><br>
 
 
 ### 인스턴스 생성하기 getInstance()
@@ -144,9 +144,9 @@ LightSwitch lightSwitch = LightSwitch.getInstance();
 ```
 
 
-<br>
+<br><br>
 
-## Light Switch 초기화 `init()`
+### Light Switch 초기화 `init()`
 
 LightSwitch 서버에서 초기 플래그를 SDK 내부적으로 캐싱하기위해 **필수적으로** LightSwitch 서비스를 초기화 해야 한다.\
 `init()` 수행 시 입력받는 `config`는 아래와 같다.
@@ -163,9 +163,9 @@ void init(String sdkKey, String serverUrl);
 lightSwitch.init("your-private-sdk-key","https://lightswitch.kr");
 ```
 
-<br>
+<br><br>
 
-## 식별자 `LSUser.class`
+### 식별자 `LSUser.class`
 
 플래그에서 반환 값을 받아오기 위해서 클라이언트 유저의 기본적인 정보를 제공하는 `LSUser.class`를 선언해야 한다.
 
@@ -192,9 +192,9 @@ LSUser lsUser = new LSUser.Builder("123")
 
 
 
-<br>
+<br><br>
 
-## 플래그 반환 값 `getFlag()`, `get<T>Flag()`
+### 플래그 반환 값 `getFlag()`, `get<T>Flag()`
 
 플래그의 반환 값을 얻는 메서드는 타입 안정성을 보장하는 메서드와 보장하지 않는 메서드로 나누어진다.
 
@@ -227,9 +227,9 @@ boolean typeSafeFlag = lightswitch.getBooleanFlag("flag-name", user, false);
 
 
 
-<br>
+<br><br>
 
-## Light Switch 사용 해제 `destroy()`
+### Light Switch 사용 해제 `destroy()`
 
 LightSwitch 서비스와의 연결을 런타임에 해제하고 싶은 경우 `destroy()`를 이용하여 연결을 해제할 수 있다.\
 캐싱된 모든 플래그도 초기화 됨에 유의해야한다.
@@ -255,14 +255,14 @@ lightSwitch.destroy();
 # LightSwitch 활용
 
 
-## 플래그 실시간 변경
+### 플래그 실시간 변경
 
 LightSwitch SDK는 내부적으로 SSE(Server Sent Event) 통신을 통해 서버로부터 플래그 변경사항을 실시간으로 감지한다.\
 따라서, 사용자는 변경된 플래그를 새로 받아오기 위해서 아무런 작업도 할 필요가 없다.
 
-<br>
+<br><br>
 
-## 플래그 키워드 `타겟 테스팅`
+### 플래그 키워드 `타겟 테스팅`
 
 LightSwitch는 플래그의 키워드와 속성을 통해 타겟 테스팅을 지원한다.
 
@@ -290,9 +290,9 @@ Boolean flagTest = lightSwitch.getBooleanFlag("FLAG TEST", lsUser, false);
 하지만, 플래그의 키워드 속성이 `[name : olrlobt]`와 `[age : 27]` 외에도 `[company : ssafy]`를 갖고 있다면, 키워드 반환 값을 반환하지 않고
 `플래그 변수 비율` 방법에 따라 반환 값을 반환한다.
 
-<br>
+<br><br><br>
 
-## 플래그 변수 비율 `A/B 테스트`, `카나리 배포`
+### 플래그 변수 비율 `A/B 테스트`, `카나리 배포`
 
 LightSwitch는 플래그 변수 비율을 실시간으로 조절하며 다양하게 활용할 수 있다.\
 변수 비율은 플래그를 얻을 때 사용하는 `LSUser.class`의 필수 `userId`에 따라 해시(MD-5)값 백분율을 기반으로 한다.
@@ -315,7 +315,75 @@ Boolean flagTest2 = lightSwitch.getBooleanFlag("FLAG TEST", lsUser2, false); // 
 위 예시에서 플래그의 변수 비율이 50%, 50%의 비율로 설정이 되어 있다면, `LSUser.class`의 `userId` 값에의 해시값에 따라 반환 값이 달라질 수 있다.\
 이를 적절히 활용하여, `A/B 테스트`, `카나리 배포` 등 여러 방면으로 활용할 수 있다.
 
+<br><br><br>
+
+
+
+## 구현 작동 화면
+
+Java SDK를 포함한 외부 프로젝트( 축구 플랫폼 프로젝트 : K리버스)에서 피처플래깅 솔루션이 정상적으로 작동하는지 확인하였다. 
+
 <br>
+
+### A/B 테스팅 : ex) 광고 순서 변경 예시
+
+> 플래그에 설정한 비율을 기반으로 값을 반환한다. 이를 A/B 테스팅에 활용할 수 있다.
+> 
+- Hash 알고리즘 MD5(Message Digest Algorithm 5)를 사용하여 회원을 고유 백분율 값으로 나눈다. 이에 따라 회원의 고유 번호에 따라 비율이 나뉘게 된다.
+- Java, JavaScript, Python 모두 같은 방식으로 구현하여 일관성을 유지하였다.
+- SSE 통신을 활용하여 Flag가 생성, 수정, 삭제 될 때 실시간으로 응답을 받아 플래그를 적용한다.
+
+- 시연에 사용한 코드
+
+```java
+LSUser lsUser = new LSUser.Builder(userId)
+            .build();
+
+if (lightSwitch.getBooleanFlag("Event 광고 플래그", lsUser, false)) {
+      eventResDtos.sort(Comparator.comparing(CheckEventResDto::getEnd_date));
+}
+```
+
+![ezgif com-resize](https://github.com/user-attachments/assets/145f5dbb-e3fb-4f1e-bef1-d608d508822e)
+
+첫 화면에서는 유저별로 광고 배너의 순서가 시작일 순으로 동일하지만, 플래그가 활성화 되고 나면 좌측 회원의 광고순서가 마감일 순으로 바뀌는 것을 확인할 수 있다.
+
+User의 고유 아이디에 따라 비율이 계산되고, 50% 비율에 속하는 유저들은 마감일 순으로 광고를 제공받는다.
+
+<br><br>
+
+
+### 키워드 기반 타겟 테스팅 : ex) 설문조사 배너 상단으로 이동 예시
+
+> 플래그에 설정한 특정 키워드를 기반으로 값을 반환한다. 플래그를 사용할 때, User의 고유 속성들을 설정할 수 있으며, 이 것이 키워드와 일치한다면 값을 반환한다. 특정 유저 타겟팅 테스트에 활용할 수 있다.
+> 
+- Builder 패턴을 사용하여 회원의 속성을 간편하게 지정할 수있다.
+- SSE 통신을 활용하여 Flag가 생성, 수정, 삭제 될 때 실시간으로 응답을 받아 플래그를 적용한다.
+
+- 시연에 사용한 코드
+
+```java
+LSUser lsUser = new LSUser.Builder(userId)
+						.property("mainBadge", user.getBadge())
+            .build();
+```
+
+![ezgif com-crop (16) (1)](https://github.com/user-attachments/assets/4eafbbcf-2816-47c6-bdf8-bdda9a886110)
+
+User의 Badge의 값을 가져와 속성으로 설정을 해 주었다. 이 것이 플래그의 키워드와 대조되어, 시연에서 Null이 아닌 유저들은 설문조사 배너가 상단으로 이동하는 것을 확인할 수 있다.  
+
+<br><br>
+
+### 변경 기록
+
+- Spring AOP를 이용하여, Flag의 변동사항을 감지하여 기록한다.
+
+
+![recording-_1_-ezgif com-crop](https://github.com/user-attachments/assets/f9d0f131-d2e9-4c44-ab4f-5b03b5ea9112)
+
+
+
+<br><br>
 
 
 ## 관련 포스팅
